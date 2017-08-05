@@ -27,6 +27,7 @@ import com.pilloxa.backgroundjob.BackgroundJobModule;
 import java.util.Timer;
 import java.util.TimerTask;
 
+import static com.pilloxa.backgroundjob.BackgroundJobModule.isKilled;
 import static com.pilloxa.backgroundjob.BackgroundJobModule.isVisible;
 import static com.pilloxa.backgroundjob.BackgroundJobModule.time;
 
@@ -49,7 +50,7 @@ public class HeadlessService extends HeadlessJsTaskService {
     }
 
     private void sendEvent() {
-        if (isAppInForeground()) {
+        if (isAppInForeground() || isKilled) {
             Log.v(LOG_TAG, "APP IS IN FOREGROUND");
             cancelTimer();
             stopSelf();
