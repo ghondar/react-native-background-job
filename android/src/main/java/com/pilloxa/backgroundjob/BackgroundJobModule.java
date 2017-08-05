@@ -30,6 +30,7 @@ public class BackgroundJobModule extends ReactContextBaseJavaModule implements L
 
     private final ReactApplicationContext reactContext;
     protected static boolean isVisible;
+    protected static boolean isKilled;
 
     private List<JobInfo> mJobs;
     private Bundle mJobBundle;
@@ -41,6 +42,10 @@ public class BackgroundJobModule extends ReactContextBaseJavaModule implements L
 
     protected void setVisible(boolean visible){
         isVisible = visible;
+    }
+
+    protected void setKilled(boolean kill){
+        isKilled = kill;
     }
 
 
@@ -207,6 +212,7 @@ public class BackgroundJobModule extends ReactContextBaseJavaModule implements L
     private void stopService() {
         if (mService != null) {
             Log.v(LOG_TAG, "Stopping Service");
+            setKilled(true);
             reactContext.stopService(mService);
             mService = null;
         }
@@ -237,6 +243,7 @@ public class BackgroundJobModule extends ReactContextBaseJavaModule implements L
     private void startForegroundJob() {
         if (mJobBundle != null) {
             Log.d(LOG_TAG, "Starting foreground job");
+            setKilled(false);
             Intent service = new Intent(reactContext, HeadlessService.class);
             service.putExtras(mJobBundle);
             mService = service;
